@@ -1,0 +1,537 @@
+<template>
+  <div>
+    <div class="search">
+      <el-input placeholder="请输入美食名称" style="width: 200px" prefix-icon="el-icon-search" v-model="name"></el-input>
+      <el-select v-model="category" placeholder="美食分类" style="width: 150px; margin-left: 10px">
+        <el-option label="全部" value=""></el-option>
+        <el-option label="特色小吃" value="特色小吃"></el-option>
+        <el-option label="农家菜品" value="农家菜品"></el-option>
+        <el-option label="地方特产" value="地方特产"></el-option>
+        <el-option label="传统美食" value="传统美食"></el-option>
+      </el-select>
+      <el-button type="info" plain style="margin-left: 10px" icon="el-icon-search" @click="load(1)">查询</el-button>
+      <el-button type="warning" plain style="margin-left: 10px" icon="el-icon-refresh" @click="reset">重置</el-button>
+    </div>
+
+    <div class="operation">
+      <el-button type="primary" icon="el-icon-plus" @click="handleAdd">新增美食</el-button>
+      <el-button type="danger" icon="el-icon-delete" :disabled="!ids.length" @click="delBatch">批量删除</el-button>
+    </div>
+
+    <div class="table">
+      <el-table :data="tableData" stripe @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="id" label="序号" width="80" align="center" sortable></el-table-column>
+        <el-table-column prop="name" label="美食名称"></el-table-column>
+        <el-table-column prop="category" label="分类">
+          <template v-slot="scope">
+            <el-tag :type="getTagType(scope.row.category)">{{ scope.row.category }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="price" label="参考价格">
+          <template v-slot="scope">
+            <span style="color: #f56c6c">¥ {{ scope.row.price }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="description" label="简介" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="content" label="详细内容">
+          <template v-slot="scope">
+            <el-button type="primary" size="mini" @click="viewData(scope.row)">点击查看</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
+        <el-table-column label="操作" width="180" align="center">
+          <template v-slot="scope">
+            <el-button plain type="primary" icon="el-icon-edit" @click="handleEdit(scope.row)" size="mini">编辑</el-button>
+            <el-button plain type="danger" icon="el-icon-delete" @click="del(scope.row.id)" size="mini">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="pagination">
+        <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page="pageNum"
+            :page-size="pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="total">
+        </el-pagination>
+      </div>
+    </div>
+
+    <!-- 新增/编辑弹窗 -->
+    <el-dialog 
+        :title="form.id ? '编辑美食信息' : '新增美食'" 
+        :visible.sync="dialogVisible" 
+        width="65%" 
+        :close-on-click-modal="false"
+        :destroy-on-close="true"
+        custom-class="food-dialog">
+        <el-form :model="form" :rules="rules" ref="formRef" label-width="100px" class="food-form">
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="美食名称" prop="name">
+                        <el-input v-model="form.name" placeholder="请输入美食名称"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="分类" prop="category">
+                        <el-select v-model="form.category" placeholder="请选择分类" style="width: 100%">
+                            <el-option label="特色小吃" value="特色小吃">
+                                <i class="el-icon-food"></i>
+                                <span style="margin-left: 8px">特色小吃</span>
+                            </el-option>
+                            <el-option label="农家菜品" value="农家菜品">
+                                <i class="el-icon-dish"></i>
+                                <span style="margin-left: 8px">农家菜品</span>
+                            </el-option>
+                            <el-option label="地方特产" value="地方特产">
+                                <i class="el-icon-shopping-bag-1"></i>
+                                <span style="margin-left: 8px">地方特产</span>
+                            </el-option>
+                            <el-option label="传统美食" value="传统美食">
+                                <i class="el-icon-dish-1"></i>
+                                <span style="margin-left: 8px">传统美食</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+                <el-col :span="24">
+                    <el-form-item label="参考价格" prop="price">
+                        <el-input-number 
+                            v-model="form.price" 
+                            :precision="2" 
+                            :step="0.1" 
+                            :min="0"
+                            style="width: 100%">
+                        </el-input-number>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            
+            <el-form-item label="简介" prop="description">
+                <el-input 
+                    type="textarea" 
+                    v-model="form.description" 
+                    :rows="3"
+                    placeholder="请输入美食简介"
+                    resize="none">
+                </el-input>
+            </el-form-item>
+
+            <el-row :gutter="20">
+                <el-col :span="16">
+                    <el-form-item label="详细内容" prop="content" class="content-editor">
+                        <div id="editor"></div>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="展示图片" class="upload-container">
+                        <el-upload
+                            class="avatar-uploader"
+                            :action="$baseUrl + '/files/upload'"
+                            :headers="{ token: user.token }"
+                            :show-file-list="false"
+                            :on-success="handleImageSuccess"
+                            :before-upload="beforeImageUpload">
+                            <img v-if="form.image" :src="getImageUrl(form.image)" class="avatar">
+                            <div v-else class="upload-placeholder">
+                                <i class="el-icon-plus avatar-uploader-icon"></i>
+                                <div class="upload-text">点击上传图片</div>
+                            </div>
+                        </el-upload>
+                        <div class="upload-tip">建议尺寸: 750x500px, 支持jpg、png格式</div>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="save">确 定</el-button>
+        </div>
+    </el-dialog>
+
+    <!-- 查看详情弹窗 -->
+    <el-dialog 
+        :title="viewTitle" 
+        :visible.sync="viewDialogVisible" 
+        width="60%"
+        custom-class="view-dialog">
+        <div class="view-content">
+            <div class="view-header">
+                <div class="view-info">
+                    <el-tag :type="getTagType(viewCategory)" class="view-category">
+                        {{ viewCategory }}
+                    </el-tag>
+                    <span class="view-price">¥ {{ viewPrice }}</span>
+                </div>
+                <div class="view-time">发布时间：{{ viewTime }}</div>
+            </div>
+            <div class="view-description">{{ viewDescription }}</div>
+            <div class="view-main">
+                <div v-if="viewImage" class="view-image">
+                    <img :src="getImageUrl(viewImage)" :alt="viewTitle">
+                </div>
+                <div class="view-text w-e-text" v-html="viewContent"></div>
+            </div>
+        </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import E from 'wangeditor'
+
+export default {
+  name: "FoodManager",
+  data() {
+    return {
+      editor: null,
+      tableData: [],
+      pageNum: 1,
+      pageSize: 10,
+      total: 0,
+      name: '',
+      category: '',
+      dialogVisible: false,
+      viewDialogVisible: false,
+      form: {},
+      viewContent: '',
+      viewTitle: '',
+      viewCategory: '',
+      viewPrice: '',
+      viewLocation: '',
+      viewDescription: '',
+      viewImage: '',
+      viewTime: '',
+      ids: [],
+      user: JSON.parse(localStorage.getItem('xm-admin') || '{}'),
+      rules: {
+        name: [{ required: true, message: '请输入美食名称', trigger: 'blur' }],
+        category: [{ required: true, message: '请选择分类', trigger: 'change' }],
+        price: [{ required: true, message: '请输入参考价格', trigger: 'blur' }],
+        location: [{ required: true, message: '请输入所属地区', trigger: 'blur' }],
+        description: [{ required: true, message: '请输入简介', trigger: 'blur' }]
+      }
+    }
+  },
+  created() {
+    this.load(1)
+  },
+  methods: {
+    getTagType(category) {
+      const types = {
+        '特色小吃': 'success',
+        '农家菜品': 'warning',
+        '地方特产': 'danger',
+        '传统美食': 'info'
+      }
+      return types[category] || ''
+    },
+    initWangEditor(content) {
+      this.$nextTick(() => {
+        this.editor = new E('#editor')
+        this.editor.config.placeholder = '请输入美食详细内容'
+        this.editor.config.uploadFileName = 'file'
+        this.editor.config.uploadImgServer = this.$baseUrl + '/files/upload'
+        this.editor.config.uploadImgHeaders = { token: this.user.token }
+        this.editor.create()
+        setTimeout(() => {
+          this.editor.txt.html(content)
+        })
+      })
+    },
+    handleAdd() {
+      this.form = {}
+      this.dialogVisible = true
+      this.initWangEditor('')
+    },
+    handleEdit(row) {
+      this.form = JSON.parse(JSON.stringify(row))
+      this.dialogVisible = true
+      this.initWangEditor(this.form.content || '')
+    },
+    viewData(row) {
+      this.viewTitle = row.name
+      this.viewCategory = row.category
+      this.viewPrice = row.price
+      this.viewLocation = row.location
+      this.viewDescription = row.description
+      this.viewContent = row.content
+      this.viewImage = row.image
+      this.viewTime = row.createTime
+      this.viewDialogVisible = true
+    },
+    handleImageSuccess(res) {
+      if (res.code === '200') {
+        this.form.image = res.data
+      } else {
+        this.$message.error('图片上传失败')
+      }
+    },
+    beforeImageUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isPNG = file.type === 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG && !isPNG) {
+        this.$message.error('上传图片只能是 JPG 或 PNG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 2MB!')
+      }
+      return (isJPG || isPNG) && isLt2M
+    },
+    save() {
+      this.$refs.formRef.validate((valid) => {
+        if (valid) {
+          this.form.content = this.editor.txt.html()
+          this.$request({
+            url: this.form.id ? '/food/update' : '/food/add',
+            method: this.form.id ? 'PUT' : 'POST',
+            data: this.form
+          }).then(res => {
+            if (res.code === '200') {
+              this.$message.success('保存成功')
+              this.load(1)
+              this.dialogVisible = false
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        }
+      })
+    },
+    del(id) {
+      this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {
+        this.$request.delete('/food/delete/' + id).then(res => {
+          if (res.code === '200') {
+            this.$message.success('操作成功')
+            this.load(1)
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }).catch(() => {})
+    },
+    handleSelectionChange(rows) {
+      this.ids = rows.map(v => v.id)
+    },
+    delBatch() {
+      if (!this.ids.length) {
+        this.$message.warning('请选择数据')
+        return
+      }
+      this.$confirm('您确定批量删除这些数据吗？', '确认删除', {type: "warning"}).then(response => {
+        this.$request.delete('/food/delete/batch', {data: this.ids}).then(res => {
+          if (res.code === '200') {
+            this.$message.success('操作成功')
+            this.load(1)
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }).catch(() => {})
+    },
+    load(pageNum) {
+      if (pageNum) this.pageNum = pageNum
+      this.$request.get('/food/selectPage', {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          name: this.name,
+          category: this.category
+        }
+      }).then(res => {
+        this.tableData = res.data?.list
+        this.total = res.data?.total
+      })
+    },
+    reset() {
+      this.name = null
+      this.category = ''
+      this.load(1)
+    },
+    handleCurrentChange(pageNum) {
+      this.load(pageNum)
+    },
+    getImageUrl(path) {
+      if (path && !path.startsWith('http')) {
+        return `${this.$baseUrl}/files/${path}`
+      }
+      return path
+    }
+  }
+}
+</script>
+
+<style scoped>
+/* 弹窗样式 */
+.food-dialog {
+  border-radius: 8px;
+}
+
+.food-dialog /deep/ .el-dialog__header {
+  padding: 20px 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.food-dialog /deep/ .el-dialog__body {
+  padding: 25px;
+}
+
+.food-form {
+  padding: 0 15px;
+}
+
+.content-editor {
+  margin-bottom: 20px;
+}
+
+.content-editor /deep/ #editor {
+  min-height: 300px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+}
+
+/* 上传区域样式 */
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-uploader {
+  width: 100%;
+  text-align: center;
+}
+
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+
+.upload-placeholder {
+  padding: 30px 0;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+}
+
+.upload-text {
+  color: #606266;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.avatar {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.upload-tip {
+  font-size: 12px;
+  color: #909399;
+  margin-top: 8px;
+}
+
+/* 查看详情样式 */
+.view-dialog {
+  border-radius: 8px;
+}
+
+.view-dialog /deep/ .el-dialog__header {
+  padding: 20px 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.view-dialog /deep/ .el-dialog__body {
+  padding: 0;
+}
+
+.view-content {
+  padding: 25px;
+}
+
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.view-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.view-price {
+  color: #f56c6c;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.view-location {
+  color: #606266;
+  font-size: 14px;
+}
+
+.view-location i {
+  margin-right: 4px;
+}
+
+.view-time {
+  color: #909399;
+  font-size: 14px;
+}
+
+.view-description {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.view-main {
+  .view-image {
+    text-align: center;
+    margin-bottom: 20px;
+    
+    img {
+      max-width: 100%;
+      border-radius: 4px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    }
+  }
+  
+  .view-text {
+    line-height: 1.8;
+    color: #333;
+    
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+}
+</style>

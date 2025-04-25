@@ -1,0 +1,86 @@
+.main-content {
+    background-color: #f5f7fa;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.application-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.page-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #19a14b;
+    padding-bottom: 10px;
+}
+
+.custom-tabs {
+    margin-bottom: 20px;
+}
+
+.tab-content {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-bar {
+    margin-bottom: 20px;
+}
+
+.custom-table {
+    margin-bottom: 20px;
+}
+
+.custom-table .el-table__header-wrapper th {
+    background-color: #f0f9eb;
+    color: #19a14b;
+}
+
+.pagination {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.custom-dialog .el-dialog__body {
+    padding: 30px 20px;
+}
+
+.custom-form .el-form-item__label {
+    font-weight: bold;
+}
+
+.custom-upload .el-upload-list__item {
+    transition: all 0.3s;
+}
+
+.custom-upload .el-upload-list__item:hover {
+    background-color: #f0f9eb;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .application-container {
+        padding: 10px;
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    .custom-table {
+        font-size: 14px;
+    }
+
+    .el-dialog {
+        width: 90% !important;
+    }
+}

@@ -1,0 +1,123 @@
+.main-content {
+    padding: 20px;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+}
+
+.user-card {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+}
+
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ebeef5;
+    padding-bottom: 20px;
+}
+
+.user-title {
+    font-size: 24px;
+    color: #303133;
+    margin: 0;
+}
+
+.user-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.avatar-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.avatar-hint {
+    margin-top: 10px;
+    color: #909399;
+    font-size: 14px;
+}
+
+.user-summary {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.user-summary h3 {
+    margin: 10px 0;
+    color: #303133;
+}
+
+.user-summary p {
+    color: #606266;
+    margin-bottom: 10px;
+}
+
+.user-form {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+.custom-dialog {
+    border-radius: 8px;
+}
+
+.custom-dialog .el-dialog__body {
+    padding: 30px 20px;
+}
+
+.el-upload {
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 120px;
+    height: 120px;
+    line-height: 120px;
+    text-align: center;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    display: block;
+}
+
+.el-timeline-item__node--normal {
+    left: -1px;
+}
+
+.el-radio__label {
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .user-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .user-actions {
+        margin-top: 10px;
+    }
+
+    .user-form {
+        padding: 10px;
+    }
+}

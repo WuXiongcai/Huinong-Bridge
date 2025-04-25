@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ProductordersMapper">
+
+    <sql id="Base_Column_List">
+        id, customer_name, time, address, phone, status, quantity, total_amount, order_id,product_name,transport_company
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Productorders">
+        select
+        <include refid="Base_Column_List" />
+        from productorders
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="orderId != null and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="customerName != null and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="status != null and status != ''"> and status = #{status}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Productorders">
+        select
+        <include refid="Base_Column_List" />
+        from productorders
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from productorders
+        where id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Productorders" useGeneratedKeys="true" keyProperty="id">
+        insert into productorders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="customerName != null">customer_name,</if>
+            <if test="time != null">time,</if>
+            <if test="address != null">address,</if>
+            <if test="phone != null">phone,</if>
+            <if test="status != null">status,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="totalAmount != null">total_amount,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="productName != null">product_name,</if>
+            <if test="transportCompany != null">transport_company,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="customerName != null">#{customerName},</if>
+            <if test="time != null">#{time},</if>
+            <if test="address != null">#{address},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="status != null">#{status},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="productName != null">#{productName},</if>
+            <if test="transportCompany != null">#{transportCompany},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Productorders">
+        update productorders
+        <set>
+            <if test="customerName != null">
+                customer_name = #{customerName},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="totalAmount != null">
+                total_amount = #{totalAmount},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId},
+            </if>
+            <if test="productName != null">
+                product_name = #{productName},
+            </if>
+            <if test="transportCompany != null">
+                transport_company = #{transportCompany},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getTotalOrders" resultType="int">
+        SELECT COUNT(*) FROM productorders
+    </select>
+
+    <select id="getPendingShipments" resultType="int">
+        SELECT COUNT(*) FROM productorders WHERE status = '待发货'
+    </select>
+
+    <select id="getMonthlySales" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(total_amount), 0) FROM productorders
+        WHERE time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+          AND time &lt; DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01')
+    </select>
+
+</mapper>

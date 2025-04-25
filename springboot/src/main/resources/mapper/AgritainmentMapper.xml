@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.AgritainmentMapper">
+
+    <sql id="Base_Column_List">
+        id, name, feature, address, phone, longitude, latitude,
+        description, price_range, image, tags, business_hours,
+        create_time, update_time
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Agritainment">
+        select
+        <include refid="Base_Column_List" />
+        from agritainment
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="name != null"> and name like concat('%', #{name}, '%')</if>
+            <if test="tags != null"> and tags like concat('%', #{tags}, '%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Agritainment">
+        select
+        <include refid="Base_Column_List" />
+        from agritainment
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.example.entity.Agritainment" useGeneratedKeys="true">
+        insert into agritainment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="feature != null">feature,</if>
+            <if test="address != null">address,</if>
+            <if test="phone != null">phone,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="description != null">description,</if>
+            <if test="priceRange != null">price_range,</if>
+            <if test="image != null">image,</if>
+            <if test="tags != null">tags,</if>
+            <if test="businessHours != null">business_hours,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="feature != null">#{feature},</if>
+            <if test="address != null">#{address},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="description != null">#{description},</if>
+            <if test="priceRange != null">#{priceRange},</if>
+            <if test="image != null">#{image},</if>
+            <if test="tags != null">#{tags},</if>
+            <if test="businessHours != null">#{businessHours},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Agritainment">
+        update agritainment
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="feature != null">feature = #{feature},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="priceRange != null">price_range = #{priceRange},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="tags != null">tags = #{tags},</if>
+            <if test="businessHours != null">business_hours = #{businessHours},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from agritainment where id = #{id}
+    </delete>
+
+</mapper>

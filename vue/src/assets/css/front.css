@@ -1,0 +1,178 @@
+/* 顶部通知栏 */
+
+.front-notice {
+    padding: 5px 20px;
+    color: #000000;
+    font-size: 12px;
+    background-color: #f8f9fa;
+}
+
+
+/* 头部导航 */
+
+.front-header {
+    height: 70px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+
+/* Logo区域 */
+
+.front-header-left {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.front-header-left:hover {
+    transform: translateY(-2px);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.title {
+    color: #19a14b;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+/* 导航菜单 */
+
+.front-header-nav {
+    border: none !important;
+    height: 70px;
+}
+
+.front-header-nav .el-menu-item {
+    height: 70px;
+    line-height: 70px;
+    font-size: 16px;
+    padding: 0 25px;
+}
+
+.front-header-nav .el-menu-item i {
+    margin-right: 5px;
+    font-size: 18px;
+}
+
+.front-header-nav .el-menu-item:hover {
+    background-color: #f5f7fa;
+}
+
+.front-header-nav .el-menu-item.is-active {
+    font-weight: bold;
+    border-bottom: 3px solid #19a14b;
+}
+
+
+/* 用户区域 */
+
+.front-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.front-header-right .el-button--text {
+    font-size: 16px;
+    color: #606266;
+}
+
+.front-header-right .el-button--text:hover {
+    color: #19a14b;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.user-info:hover {
+    background-color: #f5f7fa;
+}
+
+.username {
+    font-size: 14px;
+    color: #333;
+}
+
+.user-dropdown {
+    min-width: 180px;
+}
+
+.user-dropdown .el-dropdown-menu__item i {
+    margin-right: 8px;
+}
+
+
+/* 主体内容 */
+
+.main-body {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+
+/* 响应式设计 */
+
+@media (max-width: 1200px) {
+    .container {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 992px) {
+    .front-header-nav .el-menu-item {
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .front-header {
+        height: auto;
+    }
+    .container {
+        flex-direction: column;
+        padding: 10px;
+    }
+    .front-header-nav {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .front-header-right {
+        margin-top: 10px;
+        justify-content: center;
+    }
+}

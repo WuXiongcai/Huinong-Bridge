@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.VideoMapper">
+
+    <sql id="Base_Column_List">
+        id,title,description,videoUrl,uploadTime,coverImage
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Video">
+        select
+        <include refid="Base_Column_List" />
+        from video
+        <where>
+            <if test="id != null"> and id= #{id}</if>
+            <if test="title != null"> and title like concat('%', #{title}, '%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Video">
+        select
+        <include refid="Base_Column_List" />
+        from video
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from video
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Video" useGeneratedKeys="true">
+        insert into video
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="description != null">description,</if>
+            <if test="videoUrl != null">videoUrl,</if>
+            <if test="uploadTime != null">uploadTime,</if>
+            <if test="coverImage != null">coverImage,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="videoUrl != null">#{videoUrl},</if>
+            <if test="uploadTime != null">#{uploadTime},</if>
+            <if test="coverImage != null">#{coverImage},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Video">
+        update video
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="videoUrl != null">
+                videoUrl = #{videoUrl},
+            </if>
+            <if test="uploadTime != null">
+                uploadTime = #{uploadTime},
+            </if>
+            <if test="coverImage != null">
+                coverImage = #{coverImage},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

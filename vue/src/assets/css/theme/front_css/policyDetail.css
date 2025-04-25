@@ -1,0 +1,135 @@
+.main-content {
+    padding: 20px;
+    background-color: #f0f2f5;
+}
+
+.policy-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+}
+
+.policy-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.policy-title {
+    font-size: 24px;
+    color: #303133;
+    margin-bottom: 15px;
+}
+
+.policy-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.policy-content {
+    margin-top: 20px;
+    line-height: 1.8;
+    color: #3a3c40;
+}
+
+.policy-files {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.comment-section {
+    margin-top: 30px;
+}
+
+.comment-section h3 {
+    font-size: 18px;
+    color: #303133;
+    margin-bottom: 15px;
+}
+
+.comment-submit {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.comments-list {
+    margin-top: 30px;
+}
+
+.comment-card {
+    margin-bottom: 20px;
+}
+
+.comment-user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.username {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.comment-content {
+    margin: 10px 0;
+    color: #3a3c40;
+}
+
+.comment-replies {
+    margin-top: 15px;
+    padding-left: 20px;
+    border-left: 2px solid #e6e6e6;
+}
+
+.reply-item {
+    margin-bottom: 15px;
+}
+
+.reply-time {
+    font-size: 12px;
+    color: #909399;
+}
+
+.reply-input {
+    margin-top: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .policy-card {
+        padding: 15px;
+    }
+
+    .policy-title {
+        font-size: 20px;
+    }
+
+    .policy-meta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .comment-submit {
+        text-align: center;
+    }
+}
+
+
+.backtop-inner {
+    background-color: #19a14b;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}

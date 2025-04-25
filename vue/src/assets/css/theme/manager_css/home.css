@@ -1,0 +1,160 @@
+.home-dashboard {
+    padding: 20px;
+}
+
+
+/* 欢迎卡片样式 */
+
+.welcome-card {
+    margin-bottom: 24px;
+    background: linear-gradient(to right, #1890ff, #36cfc9);
+}
+
+.welcome-header {
+    color: white;
+    font-size: 18px;
+}
+
+.welcome-header i {
+    margin-right: 8px;
+}
+
+.welcome-content {
+    color: white;
+    margin-top: 16px;
+    font-size: 16px;
+}
+
+
+/* 统计卡片样式 */
+
+.statistics-row {
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+.stat-icon {
+    font-size: 48px;
+    color: #1890ff;
+    margin-right: 16px;
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #303133;
+    line-height: 1.4;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #909399;
+}
+
+
+/* 内容区样式 */
+
+.content-row {
+    margin-bottom: 24px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header i {
+    margin-right: 8px;
+}
+
+
+/* 快速访问样式 */
+
+.quick-access-card {
+    margin-bottom: 24px;
+}
+
+.quick-access-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-radius: 4px;
+}
+
+.quick-access-item:hover {
+    background-color: #f5f7fa;
+    color: #1890ff;
+}
+
+.quick-access-item i {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+
+/* 公告卡片样式 */
+
+.notice-card {
+    margin-bottom: 24px;
+}
+
+.notice-item {
+    margin-bottom: 8px;
+}
+
+.notice-item h4 {
+    margin: 0 0 8px 0;
+    color: #303133;
+}
+
+.notice-item p {
+    margin: 0;
+    color: #606266;
+    font-size: 14px;
+}
+
+
+/* 最近活动样式 */
+
+.recent-activities-card {
+    margin-bottom: 24px;
+}
+
+
+/* 响应式调整 */
+
+@media screen and (max-width: 768px) {
+    .home-dashboard {
+        padding: 12px;
+    }
+    .stat-item {
+        padding: 12px;
+    }
+    .stat-icon {
+        font-size: 36px;
+    }
+    .stat-value {
+        font-size: 20px;
+    }
+}
